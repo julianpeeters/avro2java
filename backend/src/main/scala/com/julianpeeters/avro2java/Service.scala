@@ -4,19 +4,14 @@ import models.Test
 import views.{Index, Page}
 
 import cats.effect.IO
-import cats._, cats.implicits._
 import cats.data._
-import io.circe._
 import io.circe.generic.auto._
-import io.circe.syntax._
 import org.http4s._
 import org.http4s.CacheDirective._
+import org.http4s.circe._
 import org.http4s.dsl._
 import org.http4s.MediaType._
 import org.http4s.headers._
-import fs2._
-
-import org.http4s.circe._
 
 object Service extends Http4sDsl[IO] {
 
