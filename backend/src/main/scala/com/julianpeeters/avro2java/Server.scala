@@ -22,7 +22,7 @@ object Server extends StreamApp[IO] {
     requestShutdown: IO[Unit]): Stream[IO, StreamApp.ExitCode] =
     BlazeBuilder[IO]
       .bindHttp(port, ip)
-      .mountService(JSApplication.service)
+      .mountService(Service.endpoints)
       .withServiceExecutor(pool)
       .serve
 }
