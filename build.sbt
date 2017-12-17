@@ -4,9 +4,11 @@ lazy val commonSettings = {
   scalaVersion := "2.12.2"
 }
 
-val Http4sVersion = "0.18.0-M6"
+val Http4sV = "0.18.0-M6"
 val utestV = "0.4.5"
 val scalaJsDomV = "0.9.1"
+val circeV = "0.7.1"
+val fs2V = "0.9.7"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
@@ -35,9 +37,10 @@ lazy val backend = (project in file("backend"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.http4s"     %% "http4s-blaze-server" % Http4sVersion,
-      "org.http4s"     %% "http4s-circe"        % Http4sVersion,
-      "org.http4s"     %% "http4s-dsl"          % Http4sVersion,
+      "io.circe" %% "circe-generic" % "0.7.1",
+      "org.http4s"     %% "http4s-blaze-server" % Http4sV,
+      "org.http4s"     %% "http4s-circe"        % Http4sV,
+      "org.http4s"     %% "http4s-dsl"          % Http4sV,
       "ch.qos.logback" % "logback-classic"      % "1.2.3"
     ),
     // Allows to read the generated JS on client
@@ -76,8 +79,12 @@ lazy val frontend = (project in file("frontend"))
     crossTarget in (Compile, packageJSDependencies) := (resourceManaged in Compile).value,
     testFrameworks += new TestFramework("utest.runner.Framework"),
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % scalaJsDomV,
-      "com.lihaoyi" %%% "utest"        % utestV % Test
+      "co.fs2" %%% "fs2-core" % fs2V,
+      "com.lihaoyi" %%% "utest"        % utestV % Test,
+      "io.circe"     %%% "circe-core"    % circeV,
+      "io.circe"     %%% "circe-generic" % circeV,
+      "io.circe"     %%% "circe-parser"  % circeV,
+      "org.scala-js" %%% "scalajs-dom" % scalaJsDomV
     )
   )
   .dependsOn(sharedJs)
