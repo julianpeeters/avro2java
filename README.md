@@ -10,4 +10,6 @@ project backend
 ~reStart
 ```
 
+then visit `http://localhost:8080/`.
+
 Adapted from Chris Davenport's [Http4s ScalaJS Example](https://github.com/davenport-scala/http4s-scalajsexample)

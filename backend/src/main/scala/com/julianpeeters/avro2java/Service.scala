@@ -1,17 +1,24 @@
 package com.julianpeeters.avro2java
 
-import models.Test
-import views.{Index, Page}
+import avrohugger.format.abstractions.JavaTreehugger
+import avrohugger.input.parsers.StringInputParser
+import avrohugger.stores.{ClassStore, SchemaStore}
+
+
+import views.Page
 
 import cats.effect.IO
 import cats.data._
 import io.circe.generic.auto._
+import io.circe._
+import io.circe.syntax._
 import org.http4s._
 import org.http4s.CacheDirective._
 import org.http4s.circe._
 import org.http4s.dsl._
 import org.http4s.MediaType._
 import org.http4s.headers._
+import scala.collection.JavaConverters._
 
 object Service extends Http4sDsl[IO] {
 
@@ -21,13 +28,37 @@ object Service extends Http4sDsl[IO] {
   val endpoints = HttpService[IO] {
 
     case req @ GET -> Root =>
-      Ok(Page.template(Seq(), Index.html, Scripts.jsScripts, Seq()).render)
+      Ok(Page.template(Seq(), Seq(), Scripts.jsScripts, Seq()).render)
         .withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
         .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
         
     case req @ POST -> Root =>
-      implicit val decoder = jsonOf[IO, Test]
-      req.as[Test].flatMap(t => Ok(s"hello, ${t.x}"))
+      val inputString: IO[String] = req.as[String] 
+      inputString.flatMap(input => {
+        implicit val encoder = jsonEncoderOf[IO, List[String]]
+        val parser = new StringInputParser
+        val schemaStore = new SchemaStore
+        val schemaOrProtocols = parser.getSchemaOrProtocols(input, schemaStore)
+  //         """|{"namespace": "example.avro", 
+  //            |"type": "record", 
+  //            |"name": "user", 
+  //            |"fields": [ 
+  //            |  {"name": "name", "type": "string"}, 
+  //            |  {"name": "favorite_number", "type": "int"} ] }
+  // """.trim.stripMargin, schemaStore)
+        val codeStrings: List[String] = schemaOrProtocols.flatMap(_ match {
+          case Left(schema) => List(JavaTreehugger.asJavaCodeString(
+            new ClassStore,
+            None,
+            schema))
+          case Right(protocol) => protocol.getTypes.asScala.map(JavaTreehugger.asJavaCodeString(
+            new ClassStore,
+            None,
+            _))
+        })
+          
+        Ok(codeStrings)
+      })
 
     case req if supportedStaticExtensions.exists(req.pathInfo.endsWith) =>
       StaticFile

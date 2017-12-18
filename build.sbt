@@ -23,7 +23,10 @@ lazy val shared =
     .settings(commonSettings)
     .settings(
       libraryDependencies ++= Seq(
-        "com.lihaoyi" %%% "scalatags" % "0.6.5"
+        "com.lihaoyi" %%% "scalatags" % "0.6.5",
+        "io.circe"       %% "circe-generic" % "0.7.1"
+        //"org.http4s"     %%% "http4s-circe"        % Http4sV
+
       )
     )
 
@@ -37,7 +40,7 @@ lazy val backend = (project in file("backend"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-generic" % "0.7.1",
+      "com.julianpeeters" %% "avrohugger-core" % "0.18.0",
       "org.http4s"     %% "http4s-blaze-server" % Http4sV,
       "org.http4s"     %% "http4s-circe"        % Http4sV,
       "org.http4s"     %% "http4s-dsl"          % Http4sV,
