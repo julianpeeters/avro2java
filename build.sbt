@@ -1,13 +1,13 @@
 lazy val commonSettings = {
   organization := "com.julianpeeters"
   version := "0.0.1-SNAPSHOT"
-  scalaVersion := "2.12.2"
+  scalaVersion := "2.12.4"
 }
 
-val Http4sV = "0.18.0-M6"
-val utestV = "0.4.5"
+val Http4sV = "0.18.0-M7"
+val utestV = "0.6.2"
 val scalaJsDomV = "0.9.1"
-val circeV = "0.7.1"
+val circeV = "0.9.0-M3"
 val fs2V = "0.9.7"
 
 // This function allows triggered compilation to run only when scala files changes
@@ -58,10 +58,6 @@ lazy val backend = (project in file("backend"))
     reStart := (reStart dependsOn (fastOptJS in (frontend, Compile))).evaluated,
     // This settings makes reStart to rebuild if a scala.js file changes on the client
     watchSources ++= (watchSources in frontend).value,
-    // On recompilation only consider changes to .scala and .js files
-    watchSources ~= { t: Seq[java.io.File] =>
-      { t.filter(includeInTrigger) }
-    },
     // Support stopping the running server
     mainClass in reStart := Some("com.julianpeeters.avro2java.Server")
   )
@@ -75,19 +71,19 @@ lazy val frontend = (project in file("frontend"))
   .settings(commonSettings: _*)
   .settings(
     // Requires the DOM
-    jsDependencies += RuntimeDOM,
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv,
     // Build a js dependencies file
     skip in packageJSDependencies := false,
     // Put the jsdeps file on a place reachable for the server
     crossTarget in (Compile, packageJSDependencies) := (resourceManaged in Compile).value,
     testFrameworks += new TestFramework("utest.runner.Framework"),
     libraryDependencies ++= Seq(
-      "co.fs2" %%% "fs2-core" % fs2V,
-      "com.lihaoyi" %%% "utest"        % utestV % Test,
+      "co.fs2"       %%% "fs2-core"      % fs2V,
+      "com.lihaoyi"  %%% "utest"         % utestV % Test,
       "io.circe"     %%% "circe-core"    % circeV,
       "io.circe"     %%% "circe-generic" % circeV,
       "io.circe"     %%% "circe-parser"  % circeV,
-      "org.scala-js" %%% "scalajs-dom" % scalaJsDomV
+      "org.scala-js" %%% "scalajs-dom"   % scalaJsDomV
     )
   )
   .dependsOn(sharedJs)
