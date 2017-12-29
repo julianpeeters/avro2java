@@ -24,7 +24,7 @@ lazy val shared =
     .settings(
       libraryDependencies ++= Seq(
         "com.lihaoyi" %%% "scalatags" % "0.6.5",
-        "io.circe"       %% "circe-generic" % "0.7.1"
+        "io.circe"       %%% "circe-generic" % "0.7.1"
         //"org.http4s"     %%% "http4s-circe"        % Http4sV
 
       )
