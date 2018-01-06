@@ -4,11 +4,11 @@ lazy val commonSettings = {
   scalaVersion := "2.12.4"
 }
 
-val Http4sV = "0.18.0-M7"
+val Http4sV = "0.18.0-M8"
 val utestV = "0.6.2"
-val scalaJsDomV = "0.9.1"
-val circeV = "0.9.0-M3"
-val fs2V = "0.9.7"
+val scalaJsDomV = "0.9.4"
+val circeV = "0.9.0"
+val fs2V = "0.10.0-M11"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
@@ -24,7 +24,7 @@ lazy val shared =
     .settings(
       libraryDependencies ++= Seq(
         "com.lihaoyi" %%% "scalatags" % "0.6.5",
-        "io.circe"       %%% "circe-generic" % "0.7.1"
+        "io.circe"    %%% "circe-generic" % "0.7.1"
         //"org.http4s"     %%% "http4s-circe"        % Http4sV
 
       )
@@ -83,7 +83,7 @@ lazy val frontend = (project in file("frontend"))
       "io.circe"     %%% "circe-core"    % circeV,
       "io.circe"     %%% "circe-generic" % circeV,
       "io.circe"     %%% "circe-parser"  % circeV,
-      "org.scala-js" %%% "scalajs-dom"   % scalaJsDomV
+      "org.scala-js" %%% "scalajs-dom"   % scalaJsDomV,
     )
   )
   .dependsOn(sharedJs)

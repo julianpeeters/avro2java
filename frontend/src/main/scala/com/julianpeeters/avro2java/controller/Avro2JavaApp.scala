@@ -1,5 +1,6 @@
 package com.julianpeeters.avro2java.controller
 
+import cats.effect.IO
 import fs2._
 import org.scalajs.dom
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
@@ -15,7 +16,7 @@ object Avro2JavaApp extends JSApp {
 
   def main(): Unit = {
     import Pipes._
-    val program: Task[Unit] = for {
+    val program: IO[Unit] = for {
       _ <- SubmissionPage.append
       _ <- streamEvents(SubmissionPage.submitButton).through {
              post(SubmissionPage.input) andThen handleResponse andThen appendResult
