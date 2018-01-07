@@ -10,7 +10,7 @@ object Scripts {
     List(
       script(src := jsScript),
       script(src := jsDeps),
-      script("com.julianpeeters.avro2java.controller.Avro2JavaApp().main()")
+      script("com.julianpeeters.avro2java.Avro2JavaApp().main()")
     )
   }
 }

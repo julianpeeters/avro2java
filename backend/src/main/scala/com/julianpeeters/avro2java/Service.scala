@@ -39,13 +39,6 @@ object Service extends Http4sDsl[IO] {
         val parser = new StringInputParser
         val schemaStore = new SchemaStore
         val schemaOrProtocols = parser.getSchemaOrProtocols(input, schemaStore)
-  //         """|{"namespace": "example.avro", 
-  //            |"type": "record", 
-  //            |"name": "user", 
-  //            |"fields": [ 
-  //            |  {"name": "name", "type": "string"}, 
-  //            |  {"name": "favorite_number", "type": "int"} ] }
-  // """.trim.stripMargin, schemaStore)
         val codeStrings: List[String] = schemaOrProtocols.flatMap(_ match {
           case Left(schema) => List(JavaTreehugger.asJavaCodeString(
             new ClassStore,

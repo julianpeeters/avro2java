@@ -15,7 +15,8 @@ object Page {
 
     html(
       head(
-        headContent
+        headContent,
+        link(rel:="shortcut icon", media:="image/png", href:="/assets/images/favicon.png"),
       ),
       body(
         bodyContent,

@@ -7,8 +7,11 @@ lazy val commonSettings = {
 val Http4sV = "0.18.0-M8"
 val utestV = "0.6.2"
 val scalaJsDomV = "0.9.4"
+val scalajsReactV = "1.1.1"
 val circeV = "0.9.0"
 val fs2V = "0.10.0-M11"
+val webjarJqueryVersion = "2.1.4"
+val webjarReactVersion = "15.6.1"
 
 // This function allows triggered compilation to run only when scala files changes
 // It lets change static files freely
@@ -24,7 +27,7 @@ lazy val shared =
     .settings(
       libraryDependencies ++= Seq(
         "com.lihaoyi" %%% "scalatags" % "0.6.5",
-        "io.circe"    %%% "circe-generic" % "0.7.1"
+        "io.circe"    %%% "circe-generic" % circeV
         //"org.http4s"     %%% "http4s-circe"        % Http4sV
 
       )
@@ -84,6 +87,20 @@ lazy val frontend = (project in file("frontend"))
       "io.circe"     %%% "circe-generic" % circeV,
       "io.circe"     %%% "circe-parser"  % circeV,
       "org.scala-js" %%% "scalajs-dom"   % scalaJsDomV,
+      "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactV,
+      "com.github.japgolly.scalajs-react" %%% "ext-cats" % scalajsReactV
+    ),
+    jsDependencies ++= Seq(
+      "org.webjars" % "jquery" % webjarJqueryVersion / s"$webjarJqueryVersion/jquery.js",
+      "org.webjars.bower" % "react" % webjarReactVersion
+        / "react.js"
+        minified "react.min.js"
+        commonJSName "React",
+      "org.webjars.bower" % "react" % webjarReactVersion
+        / "react-dom.js"
+        minified "react-dom.min.js"
+        dependsOn "react.js"
+        commonJSName "ReactDOM"
     )
   )
   .dependsOn(sharedJs)
