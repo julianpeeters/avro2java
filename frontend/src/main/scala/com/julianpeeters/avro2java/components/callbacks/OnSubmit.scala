@@ -13,15 +13,15 @@ object OnSubmit {
   def modify(
     scope: BackendScope[Unit, AppComponent.State],
     state: AppComponent.State): Callback = {
-    val modStateSubmittingInput =
+    val beginSubmitting =
       scope.modState(_.copy(submittingInput = true))
-    val modStateFinishedSubmitting =
+    val finishSubmitting =
       scope.modState(_.copy(submittingInput = false))
     val io = CallbackTo.future {
       Ajax.post("/", state.input)
           .map(r  => decode[List[String]](r.responseText))
           .map(rs => scope.modState(_.copy(results = rs.getOrElse(Nil))))
     }
-    modStateSubmittingInput >> io >> modStateFinishedSubmitting
+    beginSubmitting >> io >> finishSubmitting
   }
 }
