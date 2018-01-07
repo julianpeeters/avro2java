@@ -11,7 +11,7 @@ object Avro2JavaApp extends JSApp {
 
   def main(): Unit = {
     val page = AppComponent.component()
-    page.renderIntoDOM(dom.window.document.getElementById("app-hook"))
+    page.renderIntoDOM(dom.window.document.getElementById("js-app-hook"))
   }
 
 }

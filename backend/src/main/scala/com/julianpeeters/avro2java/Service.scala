@@ -19,8 +19,11 @@ import org.http4s.dsl._
 import org.http4s.MediaType._
 import org.http4s.headers._
 import scala.collection.JavaConverters._
+import scalatags.Text.all._
 
 object Service extends Http4sDsl[IO] {
+  
+  val jsAppHook = div(id:="js-app-hook")
 
   val supportedStaticExtensions =
     List(".html", ".js", ".map", ".css", ".png", ".ico")
@@ -28,7 +31,7 @@ object Service extends Http4sDsl[IO] {
   val endpoints = HttpService[IO] {
 
     case req @ GET -> Root =>
-      Ok(Page.template(Seq(), Seq(), Scripts.jsScripts, Seq()).render)
+      Ok(Page.template(Seq(), Seq(jsAppHook), Scripts.jsScripts, Seq()).render)
         .withContentType(`Content-Type`(`text/html`, Charset.`UTF-8`))
         .putHeaders(`Cache-Control`(NonEmptyList.of(`no-cache`())))
         
